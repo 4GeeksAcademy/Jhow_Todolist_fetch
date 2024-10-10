@@ -8,8 +8,6 @@ const Home = () => {
   const [error2, setError2] = useState(false);
   let maxLength = 70;
 
-  const userName = "jhow"; // Nombre de usuario para las peticiones
-
   // Handlers
   const inputHandler = (e) => {
     setInputValue(e.target.value);
@@ -18,7 +16,7 @@ const Home = () => {
   const handlerKeyDown = (e) => {
     if (e.key === "Enter" && inputValue.trim() !== "") {
       createToDo(); // Solo creará si la tarea no está vacía
-      setInputValue(""); // Limpia el input después de agregar la tarea
+      setInputValue(""); // borrar valor en el label al enviar respuesta
     }
   };
 
@@ -28,7 +26,7 @@ const Home = () => {
       method: "GET",
       redirect: "follow",
     };
-    fetch(`https://playground.4geeks.com/todo/users/${userName}`, requestOptions)
+    fetch(`https://playground.4geeks.com/todo/users/jhow`, requestOptions)
       .then((response) => response.json())
       .then((result) => setTareas(result.todos))
       .catch((error) => console.error(error));
@@ -55,7 +53,7 @@ const Home = () => {
       body: raw,
     };
 
-    fetch(`https://playground.4geeks.com/todo/todos/${userName}`, requestOptions)
+    fetch(`https://playground.4geeks.com/todo/todos/jhow`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log("Tarea agregada:", result);
@@ -74,29 +72,20 @@ const Home = () => {
     fetch(`https://playground.4geeks.com/todo/todos/${id}`, requestOptions)
       .then((response) => {
         if (response.ok) {
-          setTareas(tareas.filter((tarea) => tarea.id !== id)); // Filtra las tareas eliminadas
+          setTareas(tareas.filter((tarea) => tarea.id !== id)); 
         }
       })
       .catch((error) => console.error("Error al eliminar tarea:", error));
   };
 
   // useEffect Hooks
-  useEffect(() => {
-    if (tareas.length === 10) {
-      setError(true); // Muestra un error si se alcanzan 10 tareas
-    } else setError(false);
-  }, [tareas]);
+  useEffect(() => {setError(false);}, [tareas]);
 
   useEffect(() => {
-    if (inputValue.length === maxLength) {
-      setError2(true); // Muestra un error si se excede el máximo de caracteres
-    } else {
-      setError2(false);
-    }
-  }, [inputValue]);
+      setError2(false);}, [inputValue]);
 
   useEffect(() => {
-    getUserTareas(); // Obtiene las tareas del usuario al cargar el componente
+    getUserTareas(); // Obtener tareas en la API
   }, []);
 
   return (
@@ -108,8 +97,6 @@ const Home = () => {
         value={inputValue}
         onChange={inputHandler}
         onKeyDown={handlerKeyDown}
-        maxLength={70}
-        disabled={tareas.length >= 10} // Desactiva el input si hay 10 tareas
       />
       {error && <span className="error">Solo puedes añadir 10 tareas.</span>}
       {error2 && <span className="error">Máximo de 70 caracteres.</span>}
@@ -120,7 +107,7 @@ const Home = () => {
           tareas.map((tarea, index) => (
             <li key={index}>
               {tarea.label}
-              <button onClick={() => deleteTarea(tarea.id)}>🗑️</button>
+              <button onClick={() => deleteTarea(tarea.id)}>🗑️</button> 
             </li>
           ))
         )}
