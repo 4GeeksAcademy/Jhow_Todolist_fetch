@@ -6,21 +6,20 @@ const Home = () => {
   const [tareas, setTareas] = useState([]);
   const [error, setError] = useState(false);
   const [error2, setError2] = useState(false);
-  let maxLength = 70;
 
-  // Handlers
+  
   const inputHandler = (e) => {
     setInputValue(e.target.value);
   };
 
   const handlerKeyDown = (e) => {
     if (e.key === "Enter" && inputValue.trim() !== "") {
-      createToDo(); // Solo creará si la tarea no está vacía
+      createToDo(); 
       setInputValue(""); // borrar valor en el label al enviar respuesta
     }
   };
 
-  // GET Tareas
+  // GET 
   const getUserTareas = () => {
     const requestOptions = {
       method: "GET",
@@ -32,7 +31,7 @@ const Home = () => {
       .catch((error) => console.error(error));
   };
 
-  // CREATE Task
+  // CREATE 
   const createToDo = () => {
     if (inputValue.trim() === "") {
       console.error("Tarea vacía, no se puede agregar.");
@@ -43,7 +42,7 @@ const Home = () => {
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-      label: inputValue, // Asegura que inputValue no esté vacío
+      label: inputValue,
       is_done: false,
     });
 
@@ -57,12 +56,12 @@ const Home = () => {
       .then((response) => response.json())
       .then((result) => {
         console.log("Tarea agregada:", result);
-        setTareas([...tareas, result]); // Agrega la nueva tarea a la lista
+        setTareas([...tareas, result]);
       })
       .catch((error) => console.error("Error al agregar tarea:", error));
   };
 
-  // DELETE Task
+  // DELETE 
   const deleteTarea = (id) => {
     const requestOptions = {
       method: "DELETE",
@@ -78,11 +77,29 @@ const Home = () => {
       .catch((error) => console.error("Error al eliminar tarea:", error));
   };
 
+  // DELETE ALL
+  const deleteTareas = () => {
+    const deletePromises = tareas.map((tarea) => {
+      return fetch(`https://playground.4geeks.com/todo/todos/${tarea.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+    });
+
+    Promise.all(deletePromises)
+      .then(() => {
+        console.log("Todas las tareas han sido eliminadas");
+        setTareas([]); // Vaciar la lista de tareas en el estado
+      })
+      .catch((error) => console.error("Error al eliminar todas las tareas:", error));
+  };
+
   // useEffect Hooks
-  useEffect(() => {setError(false);}, [tareas]);
+  useEffect(() => { setError(false); }, [tareas]);
 
   useEffect(() => {
-      setError2(false);}, [inputValue]);
+    setError2(false);
+  }, [inputValue]);
 
   useEffect(() => {
     getUserTareas(); // Obtener tareas en la API
@@ -112,7 +129,7 @@ const Home = () => {
           ))
         )}
       </ul>
-     
+      <button onClick={deleteTareas}>Eliminar Todas las Tareas</button>
       <div>{tareas.length} Tareas</div>
     </div>
   );
