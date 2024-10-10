@@ -10,3 +10,28 @@
     import 'relative/path/to/stylesheet.scss';
 
 */
+/* Ocultar el botón de eliminar por defecto */
+.delete-btn {
+    display: none;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* Mostrar el botón de eliminar solo cuando el usuario pasa el cursor sobre el li */
+.task-item:hover .delete-btn {
+    display: inline-block;
+}
+
+/* Estilos básicos para la lista */
+.task-item {
+    list-style: none;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.Container{
+    text-align: center;
+    color: gray;
+}
